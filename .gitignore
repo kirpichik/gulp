@@ -5,3 +5,5 @@
 */ext-lib/*
 *.class
 *.jar
+.idea/
+**/target/
