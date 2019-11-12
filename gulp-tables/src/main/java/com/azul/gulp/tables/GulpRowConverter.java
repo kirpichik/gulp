@@ -14,14 +14,14 @@ public final class GulpRowConverter<O> extends Converter<GulpRow, O> {
     this.paramTypes = this.ctor.getParameterTypes();
   }
   
-  private static final <T> Constructor<T> getConstructor(final Class<T> type) {
+  private static <T> Constructor<T> getConstructor(final Class<T> type) {
     @SuppressWarnings("unchecked")
     Constructor<T>[] ctors = (Constructor[])type.getConstructors();
     if ( ctors.length != 1 ) throw new IllegalStateException();
     return ctors[0];
   }
   
-  private final O create(final Object[] args) {
+  private O create(final Object[] args) {
     try {
       return this.ctor.newInstance(args);
     } catch ( ReflectiveOperationException e ) {
@@ -30,7 +30,7 @@ public final class GulpRowConverter<O> extends Converter<GulpRow, O> {
   }
   
   @Override
-  public final void convert(final GulpRow row, final Emitter<O> emitter) throws Exception {
+  public final void convert(final GulpRow row, final Emitter<O> emitter) {
     Object[] params = new Object[this.paramTypes.length];
     for ( int i = 0; i < this.paramTypes.length; ++i ) {
       params[i] = row.get(i, this.paramTypes[i]);

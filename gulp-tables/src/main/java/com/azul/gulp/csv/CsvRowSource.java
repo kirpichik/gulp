@@ -102,13 +102,13 @@ public final class CsvRowSource extends GulpRowSource {
     }
   }
   
-  private final boolean inRange(final int rowIndex) {
+  private boolean inRange(final int rowIndex) {
     if ( this.startInclusive != null ) {
       if ( rowIndex < this.startInclusive ) return false;
     }
     
     if ( this.endExclusive != null ) {
-      if ( rowIndex >= this.endExclusive ) return false;
+      return rowIndex < this.endExclusive;
     }
     
     return true;

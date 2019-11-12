@@ -7,35 +7,29 @@ import com.azul.gulp.text.support.InjectableNormalizer;
 public final class LineNormalizers {
   private LineNormalizers() {}
   
-  public static final LineNormalizer stripLeading(final char ch) {
-    return new LineNormalizer() {
-      @Override
-      public final String normalize(final String line) {
-        for ( int i = 0; i < line.length(); ++i ) {
-          if ( line.charAt(i) != ch ) {
-            return line.substring(i);
-          }
+  public static LineNormalizer stripLeading(final char ch) {
+    return line -> {
+      for ( int i = 0; i < line.length(); ++i ) {
+        if ( line.charAt(i) != ch ) {
+          return line.substring(i);
         }
-        // emtpy line?
+      }
+      // emtpy line?
+      return line;
+    };
+  }
+  
+  public static LineNormalizer stripLeading(final int numChars) {
+    return line -> {
+      if ( line.length() < numChars ) {
         return line;
+      } else {
+        return line.substring(numChars);
       }
     };
   }
   
-  public static final LineNormalizer stripLeading(final int numChars) {
-    return new LineNormalizer() {
-      @Override
-      public final String normalize(final String line) {
-        if ( line.length() < numChars ) {
-          return line;
-        } else {
-          return line.substring(numChars);
-        }
-      }
-    };
-  }
-  
-  public static final Normalizer<Line> toGenericNormalizer(final LineNormalizer lineNormalizer) {
+  public static Normalizer<Line> toGenericNormalizer(final LineNormalizer lineNormalizer) {
     return new InjectableNormalizer<Line>() {
       @Override
       public final void onInject(final InjectionContext ctx) {

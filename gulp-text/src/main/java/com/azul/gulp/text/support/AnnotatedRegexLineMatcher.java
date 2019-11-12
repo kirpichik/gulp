@@ -44,7 +44,7 @@ public final class AnnotatedRegexLineMatcher<T> extends RegexLineMatcher<T> {
     }
   }
   
-  private final Constructor<T> findConstructorFor(final RegexMatcher matcher) {
+  private Constructor<T> findConstructorFor(final RegexMatcher matcher) {
     // caching works on the assumption that the pattern (and therefore the match count)
     // is effectively static.
     if ( this.cachedCtor != null ) {
@@ -66,7 +66,7 @@ public final class AnnotatedRegexLineMatcher<T> extends RegexLineMatcher<T> {
     throw new IllegalStateException("No matching constructor for regex");
   }
   
-  private static final int getAdjustedParamCount(final Constructor<?> ctor) {
+  private static int getAdjustedParamCount(final Constructor<?> ctor) {
     int count = 0;    
     for ( Class<?> paramType: ctor.getParameterTypes() ) {
       if ( !paramType.equals(Line.class) ) count += 1;

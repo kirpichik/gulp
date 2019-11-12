@@ -81,12 +81,12 @@ public abstract class GulpLogBase<C extends GulpLogExtension<C>>
     return Collections.emptyList();
   }
   
-  private final Nexus createEngine() {
+  private Nexus createEngine() {
     List<Plugin> corePlugins = this.corePlugins();
     List<Plugin> additionalPlugins = this.additionalPlugins();
     
-    List<Plugin> plugins = new ArrayList<Plugin>(
-        corePlugins.size() + additionalPlugins.size());
+    List<Plugin> plugins = new ArrayList<>(
+            corePlugins.size() + additionalPlugins.size());
     plugins.addAll(corePlugins);
     plugins.addAll(additionalPlugins);
     
@@ -124,16 +124,16 @@ public abstract class GulpLogBase<C extends GulpLogExtension<C>>
   
   @Override
   public final <T> GulpLogStream<T> select(final Class<? extends T> dataClass) {
-    return new GulpLogStreamImpl<T>(new StreamCore<T>() {
+    return new GulpLogStreamImpl<>(new StreamCore<T>() {
       @Override
       protected void processImpl(final Processor<? super T> processor) throws StreamProcessingException {
         Nexus engine = GulpLogBase.this.createEngine();
         engine.handle(dataClass, new NexusHandler<T>() {
           @Override
-          public void init(final Nexus engine) throws Exception {
+          public void init(final Nexus engine) {
             engine.inject(processor);
           }
-          
+
           @Override
           public void handle(final T value) throws Exception {
             processor.process(value);
@@ -141,9 +141,9 @@ public abstract class GulpLogBase<C extends GulpLogExtension<C>>
         });
         try {
           GulpLogBase.this.run(engine);
-        } catch ( StreamProcessingException e )  {
+        } catch (StreamProcessingException e) {
           throw e;
-        } catch ( Exception e ) {
+        } catch (Exception e) {
           throw new StreamProcessingException(e);
         }
       }
@@ -158,57 +158,53 @@ public abstract class GulpLogBase<C extends GulpLogExtension<C>>
     final Class<? extends S> secondDataClass,
     final PairPredicate<? super F, ? super S> predicateFn)
   {
-    return new GulpPairStreamImpl<F, S>(new StreamCore<Pair<F, S>>() {
+    return new GulpPairStreamImpl<>(new StreamCore<Pair<F, S>>() {
       @Override
       protected void processImpl(final Processor<? super Pair<F, S>> processor)
-        throws StreamProcessingException
-      {
+              throws StreamProcessingException {
         Nexus engine = GulpLogBase.this.createEngine();
-        
+
         Set<F> firsts = new HashSet<>(DEFAULT_COLLECTION_SIZE);
         Set<S> seconds = new HashSet<>(DEFAULT_COLLECTION_SIZE);
-        
+
         engine.handle(firstDataClass, new NexusHandler<F>() {
           @Override
-          public void init(final Nexus engine) throws Exception {
+          public void init(final Nexus engine) {
             // arbitrarily chose to inject processor & predicate in 
             // first handler could be done in second handler, too.
             engine.inject(processor);
-            
+
             engine.inject(predicateFn);
           }
-          
+
           @Override
           public void handle(final F newFirst) throws Exception {
-            for ( S second: seconds ) {
-              if ( predicateFn.matches(newFirst, second) ) {
+            for (S second : seconds) {
+              if (predicateFn.matches(newFirst, second)) {
                 processor.process(Pair.make(newFirst, second));
               }
             }
-            
+
             firsts.add(newFirst);
           }
         });
-        
-        engine.handle(secondDataClass, new NexusHandler<S>() {
-          @Override
-          public void handle(final S newSecond) throws Exception {
-            for ( F first: firsts ) {
-              if ( predicateFn.matches(first, newSecond) ) {
-                // dispatch pair
-                processor.process(Pair.make(first, newSecond));
-              }
+
+        engine.handle(secondDataClass, (NexusHandler<S>) newSecond -> {
+          for (F first : firsts) {
+            if (predicateFn.matches(first, newSecond)) {
+              // dispatch pair
+              processor.process(Pair.make(first, newSecond));
             }
-            
-            seconds.add(newSecond);
           }
+
+          seconds.add(newSecond);
         });
-        
+
         try {
           GulpLogBase.this.run(engine);
-        } catch ( StreamProcessingException e )  {
+        } catch (StreamProcessingException e) {
           throw e;
-        } catch ( Exception e ) {
+        } catch (Exception e) {
           throw new StreamProcessingException(e);
         }
       }
@@ -234,61 +230,60 @@ public abstract class GulpLogBase<C extends GulpLogExtension<C>>
     final Class<? extends S> secondDataClass,
     final ThrowingFunction<? super S, ? extends K> secondKeyFn)
   {
-    return new GulpPairStreamImpl<F, S>(new StreamCore<Pair<F, S>>() {
+    return new GulpPairStreamImpl<>(new StreamCore<Pair<F, S>>() {
       @Override
       protected void processImpl(final Processor<? super Pair<F, S>> processor)
-        throws StreamProcessingException
-      {
+              throws StreamProcessingException {
         Nexus engine = GulpLogBase.this.createEngine();
-        
+
         Map<K, F> firstsMap = new HashMap<>(DEFAULT_COLLECTION_SIZE);
         Map<K, S> secondsMap = new HashMap<>(DEFAULT_COLLECTION_SIZE);
-        
+
         engine.handle(firstDataClass, new NexusHandler<F>() {
           @Override
-          public void init(final Nexus engine) throws Exception {
+          public void init(final Nexus engine) {
             // arbitrarily chose to inject processor in 
             // first handler could be done in second handler, too.
             engine.inject(processor);
-            
+
             engine.inject(firstKeyFn);
           }
-          
+
           @Override
           public void handle(final F newFirst) throws Exception {
             K key = firstKeyFn.apply(newFirst);
             firstsMap.put(key, newFirst);
-            
+
             S second = secondsMap.get(key);
-            if ( second != null ) {
+            if (second != null) {
               processor.process(Pair.make(newFirst, second));
             }
           }
         });
-        
+
         engine.handle(secondDataClass, new NexusHandler<S>() {
           @Override
-          public void init(final Nexus engine) throws Exception {
+          public void init(final Nexus engine) {
             engine.inject(secondKeyFn);
           }
-          
+
           @Override
           public void handle(final S newSecond) throws Exception {
             K key = secondKeyFn.apply(newSecond);
             secondsMap.put(key, newSecond);
-            
+
             F first = firstsMap.get(key);
-            if ( first != null ) {
+            if (first != null) {
               processor.process(Pair.make(first, newSecond));
             }
           }
         });
-        
+
         try {
           GulpLogBase.this.run(engine);
-        } catch ( StreamProcessingException e )  {
+        } catch (StreamProcessingException e) {
           throw e;
-        } catch ( Exception e ) {
+        } catch (Exception e) {
           throw new StreamProcessingException(e);
         }
       }
@@ -343,13 +338,13 @@ public abstract class GulpLogBase<C extends GulpLogExtension<C>>
   }
   
   public final <R> Result<R> analyze(PackagedAnalyzer<R> analyzer) {
-    return new Result<R>(analyzer.analyze(this));
+    return new Result<>(analyzer.analyze(this));
   }
   
   @Override
   public final <R> Result<R> analyze(GenericAnalyzer<R> analyzer) {
     this.process(analyzer);
-    return new Result<R>(analyzer);
+    return new Result<>(analyzer);
   }
   
   @Override
@@ -423,30 +418,28 @@ public abstract class GulpLogBase<C extends GulpLogExtension<C>>
     engine.inject(logProcessor);
     
     for ( Class<?> klass: logProcessor.requiredTypes() ) {
-      Class rawKlass = (Class)klass;
-      
-      Processor rawProcessor = (Processor)logProcessor.processorFor(klass);
+
+      Processor rawProcessor = logProcessor.processorFor(klass);
       if ( rawProcessor != null ) {
-        engine.handle(rawKlass, new NexusHandlerAdapter(rawProcessor));
+        engine.handle(klass, new NexusHandlerAdapter(rawProcessor));
       }
       
-      Processor rawUnhandledProcessor = (Processor)logProcessor.unhandledProcessorFor(klass);
+      Processor rawUnhandledProcessor = logProcessor.unhandledProcessorFor(klass);
       if ( rawUnhandledProcessor != null ) {
-        engine.unhandle(rawKlass, new NexusUnhandlerAdapter(rawUnhandledProcessor));
+        engine.unhandle(klass, new NexusUnhandlerAdapter(rawUnhandledProcessor));
       }
     }
     
     for ( Class<?> klass: logProcessor.optionalTypes() ) {
-      Class rawKlass = (Class)klass;
       
-      Processor rawProcessor = (Processor)logProcessor.processorFor(klass);
+      Processor rawProcessor = logProcessor.processorFor(klass);
       if ( rawProcessor != null ) {
-        engine.handle(rawKlass, new NexusHandlerAdapter(rawProcessor));
+        engine.handle(klass, new NexusHandlerAdapter(rawProcessor));
       }
       
-      Processor rawUnhandledProcessor = (Processor)logProcessor.unhandledProcessorFor(klass);
+      Processor rawUnhandledProcessor = logProcessor.unhandledProcessorFor(klass);
       if ( rawUnhandledProcessor != null ) {
-        engine.unhandle(rawKlass, new NexusUnhandlerAdapter(rawUnhandledProcessor));
+        engine.unhandle(klass, new NexusUnhandlerAdapter(rawUnhandledProcessor));
       }
     }
     

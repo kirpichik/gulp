@@ -13,8 +13,7 @@ public class EventCapturePlugin extends Plugin {
   @Override
   public <V> void onEventRequest(
     final Nexus nexus,
-    final Class<V> requiredType) throws Exception
-  {
+    final Class<V> requiredType) {
     for ( Field field: requiredType.getFields() ) {
       Gulp.Capture captureAnno = field.getAnnotation(Gulp.Capture.class);
       if ( captureAnno == null ) continue;
@@ -44,8 +43,7 @@ public class EventCapturePlugin extends Plugin {
   
   public <V> void onConnect(
     final Nexus nexus,
-    final Object object) throws Exception
-  {
+    final Object object) {
     for ( Field field: object.getClass().getFields() ) {
       Gulp.Capture captureAnno = field.getAnnotation(Gulp.Capture.class);
       if ( captureAnno == null ) continue;
@@ -69,7 +67,7 @@ public class EventCapturePlugin extends Plugin {
     }
   }
   
-  private final class EventFieldConnector<R, T> 
+  private static final class EventFieldConnector<R, T>
     implements NexusHandler<R>, NexusNormalizer<T>
   {
     private final Field field;
@@ -80,7 +78,7 @@ public class EventCapturePlugin extends Plugin {
     } 
     
     @Override
-    public final void handle(final R value) throws Exception {
+    public final void handle(final R value) {
       if ( value == null ) throw new IllegalArgumentException();
       
       this.last = value;
@@ -96,7 +94,7 @@ public class EventCapturePlugin extends Plugin {
     }
   }
   
-  private final class InjectedObjectConnector<T> implements NexusHandler<T> {
+  private static final class InjectedObjectConnector<T> implements NexusHandler<T> {
     private final Object target;
     private final Field field;
 

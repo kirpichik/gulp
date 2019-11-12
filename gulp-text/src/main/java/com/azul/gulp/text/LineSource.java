@@ -61,7 +61,7 @@ public final class LineSource extends Source<Line> {
     if ( lineMatcherAnnos.isEmpty() ) return null;
     
     LineMatcher<U> lineMatcher = GulpText.makeMatcherFrom(type, lineMatcherAnnos);
-    return new LineMatcherConverterAdapter<U>(type, lineMatcher);
+    return new LineMatcherConverterAdapter<>(type, lineMatcher);
   }
  
   @Override

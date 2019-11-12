@@ -5,22 +5,22 @@ import java.util.Set;
 public interface GulpStreamExtension<E extends GulpStreamExtension<E, T>, T> 
   extends GulpStream<T>
 {
-  public abstract E filter(Predicate<? super T> predicate);
+  E filter(Predicate<? super T> predicate);
   
-  public abstract E filter(Set<? super T> set);
-  
-  @SuppressWarnings("unchecked")
-  public abstract E filter(T... set);
-  
-  public abstract E filterOut(Predicate<? super T> predicate);
-  
-  public abstract E filterOut(Set<? super T> set);
+  E filter(Set<? super T> set);
   
   @SuppressWarnings("unchecked")
-  public abstract E filterOut(T... set);
+  E filter(T... set);
   
-  public abstract E unique();
+  E filterOut(Predicate<? super T> predicate);
   
-  public abstract E unique(final ThrowingFunction<? super T, ?> identityFn);
+  E filterOut(Set<? super T> set);
+  
+  @SuppressWarnings("unchecked")
+  E filterOut(T... set);
+  
+  E unique();
+  
+  E unique(final ThrowingFunction<? super T, ?> identityFn);
 
 }

@@ -9,7 +9,7 @@ import com.azul.gulp.Gulp;
 public final class PropertyUtils {
   private PropertyUtils() {}
   
-  public static final Map<Class<?>, KeyProperty> findKeys(
+  public static Map<Class<?>, KeyProperty> findKeys(
     final Map<String, Property> props)
   {
     Map<Class<?>, KeyProperty> keyProps = new HashMap<>();

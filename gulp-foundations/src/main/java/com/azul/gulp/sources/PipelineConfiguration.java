@@ -34,8 +34,8 @@ public final class PipelineConfiguration {
     final Class<T> type,
     final NexusNormalizer<T> normalizer)
   {
-    this.normalizedTypes = new ArrayList<Class<?>>(baseConfig.normalizedTypes.size() + 1);
-    this.normalizers = new ArrayList<NexusNormalizer<?>>(baseConfig.normalizers.size() + 1);
+    this.normalizedTypes = new ArrayList<>(baseConfig.normalizedTypes.size() + 1);
+    this.normalizers = new ArrayList<>(baseConfig.normalizers.size() + 1);
     
     this.normalizedTypes.addAll(baseConfig.normalizedTypes);
     this.normalizers.addAll(baseConfig.normalizers);
@@ -74,7 +74,7 @@ public final class PipelineConfiguration {
     this.preprocessorClasses.add(preprocessorClass);
   }
   
-  private final <T> PipelineConfiguration add(
+  private <T> PipelineConfiguration add(
     final Class<T> type,
     final NexusNormalizer<T> normalizer)
   {
@@ -87,7 +87,7 @@ public final class PipelineConfiguration {
   {
     return this.add(type, new NexusNormalizer<T>() {
       @Override
-      public void init(final Nexus nexus) throws Exception {
+      public void init(final Nexus nexus) {
         nexus.inject(normalizer);
       }
       
@@ -107,14 +107,14 @@ public final class PipelineConfiguration {
       private NexusEmitter<V> emitter;
       
       @Override
-      public final void init(final Nexus ctx) throws Exception {
+      public final void init(final Nexus ctx) {
         ctx.inject(enricher);
         
         ctx.require(inputType);
         this.emitter = ctx.getEmitter(outputType);
       }
       
-      public final T normalize(T value) throws Exception {
+      public final T normalize(T value) {
         V enrichment = enricher.enrichment(value);
         if ( enrichment != null ) {
           this.emitter.fire(enrichment);

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class ProcessorInspector<A extends Annotation> {
-  public static final <A extends Annotation> ProcessorInspector<A> make(final Class<A> annoClass) {
+  public static <A extends Annotation> ProcessorInspector<A> make(final Class<A> annoClass) {
     return new ProcessorInspector<A>() {
       @Override
       protected Class<A> annotationClass() {

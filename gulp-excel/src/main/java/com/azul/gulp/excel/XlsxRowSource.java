@@ -109,7 +109,7 @@ final class XlsxRowSource extends GulpRowSource {
     }
   }
   
-  private final void processSheet(
+  private void processSheet(
     final XlsxFile xlsxFile,
     final InputStream in,
     final Processor<? super GulpRow> processor)
@@ -123,9 +123,9 @@ final class XlsxRowSource extends GulpRowSource {
     }    
     
     SheetHandlerImpl sheetHandler = new SheetHandlerImpl(
-      this.startInclusive,
-      this.endExclusive,
-      processor);
+            this.startInclusive,
+            this.endExclusive,
+            processor);
     
     ContentHandler contentHandler = new XSSFSheetXMLHandler(
       xlsxFile.styleTable,
@@ -139,7 +139,7 @@ final class XlsxRowSource extends GulpRowSource {
     xmlReader.parse(new InputSource(in));
   }
   
-  private class SheetHandlerImpl 
+  private static class SheetHandlerImpl
     extends DataFormatter
     implements SheetContentsHandler
   {
@@ -227,13 +227,13 @@ final class XlsxRowSource extends GulpRowSource {
       }
     }
     
-    private final boolean inRange(final int rowIndex) {
+    private boolean inRange(final int rowIndex) {
       if ( this.startInclusive != null ) {
         if ( rowIndex < this.startInclusive ) return false;
       }
       
       if ( this.endExclusive != null ) {
-        if ( rowIndex >= this.endExclusive ) return false;
+        return rowIndex < this.endExclusive;
       }
       
       return true;

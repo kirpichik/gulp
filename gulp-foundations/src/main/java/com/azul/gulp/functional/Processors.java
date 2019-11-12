@@ -12,7 +12,7 @@ import com.azul.gulp.inject.InjectionContext;
 public final class Processors {
   private Processors() {}
   
-  public static final <T> Processor<T> filter(
+  public static <T> Processor<T> filter(
       final Predicate<? super T> predicate,
       final Processor<? super T> processor)
   {
@@ -32,7 +32,7 @@ public final class Processors {
     };
   }
   
-  public static final <T, U> Processor<T> map(
+  public static <T, U> Processor<T> map(
       final ThrowingFunction<? super T, ? extends U> mappingFn,
       final Processor<? super U> processor)
   {
@@ -50,23 +50,14 @@ public final class Processors {
     };
   }
   
-  public static final <T> Processor<T> addTo(final Collection<? super T> collection) {
-    return new Processor<T>() {
-      @Override
-      public void process(final T object) {
-        collection.add(object);
-      }
-    };
+  public static <T> Processor<T> addTo(final Collection<? super T> collection) {
+    return object -> collection.add(object);
   }
   
-  public static final <K, V> Processor<V> addToMap(
+  public static <K, V> Processor<V> addToMap(
       final Map<? super K, ? super V> map,
       final ThrowingFunction<? super V, ? extends K> keyFn)
   {
-    return new Processor<V>() {
-      public void process(final V object) throws Exception {
-        map.put(keyFn.apply(object), object);
-      }
-    };
+    return object -> map.put(keyFn.apply(object), object);
   }
 }

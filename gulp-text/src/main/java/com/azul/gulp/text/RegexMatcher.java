@@ -10,7 +10,7 @@ public final class RegexMatcher {
   private final Matcher matcher;
   private int nextGroup = 1;
 
-  public static final RegexMatcher match(
+  public static RegexMatcher match(
     final Pattern pattern,
     final CharSequence corpus)
   {
@@ -136,7 +136,7 @@ public final class RegexMatcher {
     return convert(this.nextGroup(), type, param);
   }
   
-  private static final <T> T convert(
+  private static <T> T convert(
       final String value,
       final Class<? extends T> type,
       final Object optionalParam)
@@ -186,7 +186,7 @@ public final class RegexMatcher {
     throw new UnsupportedOperationException("unsupported type");
   }
   
-  private static final char parseChar(final String value) {
+  private static char parseChar(final String value) {
     switch ( value.length() ) {
       case 0:
       return '\0';
@@ -200,7 +200,7 @@ public final class RegexMatcher {
   }
   
   @SuppressWarnings("unchecked")
-  private static final <T> T cast(final Object value) {
+  private static <T> T cast(final Object value) {
     return (T)value;
   }
   

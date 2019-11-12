@@ -4,10 +4,10 @@ import java.io.IOException;
 
 final class ExceptionHelper {
   public interface Statement {
-    public void execute() throws Exception;
+    void execute();
   }
   
-  public static final void rethrowIO(Statement stmt)
+  public static void rethrowIO(Statement stmt)
     throws IOException
   {
     ExceptionHelper exHelper = new ExceptionHelper();
@@ -15,7 +15,7 @@ final class ExceptionHelper {
     exHelper.rethrowIO();
   }
   
-  public static final void rethrowRuntime(Statement stmt)
+  public static void rethrowRuntime(Statement stmt)
     throws RuntimeException
   {
     ExceptionHelper exHelper = new ExceptionHelper();
@@ -23,7 +23,7 @@ final class ExceptionHelper {
     exHelper.rethrowRuntime();
   }
   
-  public static final void rethrowIllegal(Statement stmt)
+  public static void rethrowIllegal(Statement stmt)
     throws RuntimeException
   {
     ExceptionHelper exHelper = new ExceptionHelper();

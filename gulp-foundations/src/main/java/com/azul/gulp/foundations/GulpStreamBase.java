@@ -56,7 +56,7 @@ public class GulpStreamBase<E extends GulpStreamExtension<E, T>, T> implements G
     this.core = asCore(wrapped);
   }
   
-  static final <T> StreamCore<? extends T> asCore(final GulpStream<? extends T> wrapped) {
+  static <T> StreamCore<? extends T> asCore(final GulpStream<? extends T> wrapped) {
     if ( wrapped instanceof GulpStreamBase ) {
       @SuppressWarnings("unchecked")
       GulpStreamBase<?, ? extends T> wrappedBase = (GulpStreamBase<?, ? extends T>)wrapped;
@@ -215,7 +215,7 @@ public class GulpStreamBase<E extends GulpStreamExtension<E, T>, T> implements G
       private T max = null;
     
       @Override
-      public final void process(final T object) throws Exception {
+      public final void process(final T object) {
         if ( this.min == null ) {
           this.min = object;
           this.max = object;
@@ -293,8 +293,7 @@ public class GulpStreamBase<E extends GulpStreamExtension<E, T>, T> implements G
       @Override
       public final void process(
         final GroupBuilder<Integer, T> groupBuilder,
-        final T element) throws Exception
-      {
+        final T element) {
         this.groupCount += 1;
         if ( this.groupCount == count ) {
           this.groupNum += 1;
@@ -319,8 +318,7 @@ public class GulpStreamBase<E extends GulpStreamExtension<E, T>, T> implements G
       @Override
       public final void process(
         final GroupBuilder<Integer, T> groupBuilder,
-        final T element) throws Exception
-      {
+        final T element) {
         if ( this.groupNum == null ) {
           this.groupNum = 1;
         } else if ( predicateFn.matches(element) ) {
@@ -462,7 +460,7 @@ public class GulpStreamBase<E extends GulpStreamExtension<E, T>, T> implements G
     return this.sortImpl(comparator, false);
   }
   
-  private final GulpStream<T> sortImpl(
+  private GulpStream<T> sortImpl(
     final Comparator<? super T> comparator,
     final boolean invert)
   {
@@ -503,7 +501,7 @@ public class GulpStreamBase<E extends GulpStreamExtension<E, T>, T> implements G
     throws StreamProcessingException
   {
     this.core.process(analyzer);
-    return new Result<R>(analyzer);
+    return new Result<>(analyzer);
   }
   
   @Override
@@ -519,7 +517,7 @@ public class GulpStreamBase<E extends GulpStreamExtension<E, T>, T> implements G
     throws StreamProcessingException
   {
     this.core.process(analyzer);
-    return new ParameterizedResult<P, R>(analyzer);
+    return new ParameterizedResult<>(analyzer);
   }
   
   @Override
@@ -602,7 +600,7 @@ public class GulpStreamBase<E extends GulpStreamExtension<E, T>, T> implements G
   protected final <F, S> GulpPairStream<F, S> createPairDerivative(
     final StreamCore<? extends Pair<F, S>> core)
   {
-    return new GulpPairStreamImpl<F, S>(core);
+    return new GulpPairStreamImpl<>(core);
   }
   
   @Override
@@ -625,9 +623,10 @@ public class GulpStreamBase<E extends GulpStreamExtension<E, T>, T> implements G
     return this.filter(set::contains);
   }
   
+  @SafeVarargs
   @Override
   public final E filter(final T... ts) {
-    Set<T> set = new HashSet<T>(ts.length);
+    Set<T> set = new HashSet<>(ts.length);
     set.addAll(Arrays.asList(ts));
     
     return this.filter(set);
@@ -643,9 +642,10 @@ public class GulpStreamBase<E extends GulpStreamExtension<E, T>, T> implements G
     return this.filterOut(set::contains);
   }
   
+  @SafeVarargs
   @Override
   public final E filterOut(final T... ts) {
-    Set<T> set = new HashSet<T>(ts.length);
+    Set<T> set = new HashSet<>(ts.length);
     set.addAll(Arrays.asList(ts));
     
     return this.filterOut(set);
@@ -710,7 +710,7 @@ public class GulpStreamBase<E extends GulpStreamExtension<E, T>, T> implements G
   
   @Override
   public <U> GulpStream<U> map(final Map<? super T, ? extends U> map) {
-    return this.map((t) -> map.get(t));
+    return this.map(map::get);
   }
   
   @Override
@@ -789,9 +789,7 @@ public class GulpStreamBase<E extends GulpStreamExtension<E, T>, T> implements G
   @Override
   public final <K> Map<K, T> toMap(final ThrowingFunction<? super T, ? extends K> keyFn) {
     HashMap<K, T> map = new HashMap<>();
-    this.process(e -> {
-      map.put(keyFn.apply(e), e);
-    });
+    this.process(e -> map.put(keyFn.apply(e), e));
     return map;
   }
   
@@ -801,18 +799,14 @@ public class GulpStreamBase<E extends GulpStreamExtension<E, T>, T> implements G
     final ThrowingFunction<? super T, ? extends V> valueFn)
   {
     HashMap<K, V> map = new HashMap<>();
-    this.process(e -> {
-      map.put(keyFn.apply(e), valueFn.apply(e));
-    });
+    this.process(e -> map.put(keyFn.apply(e), valueFn.apply(e)));
     return map;
   }
   
   @Override
   public <K extends Comparable<?>> SortedMap<K, T> toSortedMap(ThrowingFunction<? super T, ? extends K> keyFn) {
     TreeMap<K, T> map = new TreeMap<>();
-    this.process(e -> {
-      map.put(keyFn.apply(e), e);
-    });
+    this.process(e -> map.put(keyFn.apply(e), e));
     return map;
   }
   
@@ -822,9 +816,7 @@ public class GulpStreamBase<E extends GulpStreamExtension<E, T>, T> implements G
     ThrowingFunction<? super T, ? extends V> valueFn)
   {
     TreeMap<K, V> map = new TreeMap<>();
-    this.process(e -> {
-      map.put(keyFn.apply(e), valueFn.apply(e));
-    });
+    this.process(e -> map.put(keyFn.apply(e), valueFn.apply(e)));
     return map;
   }
   

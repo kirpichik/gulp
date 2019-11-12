@@ -4,5 +4,5 @@ import java.io.IOException;
 
 @FunctionalInterface
 public interface IoProvider<T> {
-  public abstract T open() throws IOException; 
+  T open() throws IOException;
 }

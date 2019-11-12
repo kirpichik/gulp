@@ -16,7 +16,7 @@ final class PrefetchedStreamCore<T> extends StreamCore<T> {
     this.preloaded = preloadFrom(wrapped);
   }
   
-  private static final <T> List<T> preloadFrom(final StreamCore<T> wrapped) {
+  private static <T> List<T> preloadFrom(final StreamCore<T> wrapped) {
     int DEFAULT_CAPACITY = 1_000;
     ArrayList<T> loading = new ArrayList<>(DEFAULT_CAPACITY);
     wrapped.processImpl(loading::add);

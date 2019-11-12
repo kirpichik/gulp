@@ -18,12 +18,12 @@ public abstract class SourceBasedGulpLog<E extends GulpLogExtension<E>, S> exten
   private final SourceConverterPlugin<S> sourcePlugin;
   
   public SourceBasedGulpLog(final Source<S> source) {
-    this.sourcePlugin = new SourceConverterPlugin<S>(source);
+    this.sourcePlugin = new SourceConverterPlugin<>(source);
   }
   
   protected SourceBasedGulpLog(final Source<S> source, final PipelineConfiguration normalizers) {
     super(normalizers);
-    this.sourcePlugin = new SourceConverterPlugin<S>(source);
+    this.sourcePlugin = new SourceConverterPlugin<>(source);
   }
   
   @Override
@@ -58,24 +58,19 @@ public abstract class SourceBasedGulpLog<E extends GulpLogExtension<E>, S> exten
   
   @Override
   protected final List<Class<?>> coreTypes() {
-    return Collections.<Class<?>>singletonList(this.coreType());
+    return Collections.singletonList(this.coreType());
   }
   
   @Override
   protected List<Plugin> additionalPlugins() {
-    return Collections.<Plugin>singletonList(this.sourcePlugin);
+    return Collections.singletonList(this.sourcePlugin);
   }
   
   @Override
   protected void run(final Nexus engine) throws Exception {
     final NexusEmitter<S> emitter = engine.getEmitter(this.coreType());
     
-    this.source().forEach(new Processor<S>() {
-      @Override
-      public final void process(final S input) {
-        emitter.fire(input);
-      }
-    });
+    this.source().forEach(input -> emitter.fire(input));
   }
   
   private static final class SourceConverterPlugin<T> extends Plugin {
@@ -88,9 +83,7 @@ public abstract class SourceBasedGulpLog<E extends GulpLogExtension<E>, S> exten
     @Override
     public <V> boolean handleEventRequest(
       final Nexus nexus,
-      final Class<V> requiredType)
-      throws Exception
-    {
+      final Class<V> requiredType) {
       Class<T> coreType = this.source.coreType();
       
       final Converter<T, V> converter = this.source.converterFor(nexus, requiredType);
@@ -101,7 +94,7 @@ public abstract class SourceBasedGulpLog<E extends GulpLogExtension<E>, S> exten
         private Emitter<V> emitter;
         
         @Override
-        public void init(final Nexus nexus) throws Exception {
+        public void init(final Nexus nexus) {
           converter.init(nexus);
 
           this.marker = nexus.getMarker(coreType);

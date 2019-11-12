@@ -14,7 +14,7 @@ public final class BasicAnnotationFinder implements AnnotationFinder {
 	return toList(klass.getAnnotationsByType(annoKlass));
   }
   
-  private static final <A> List<A> toList(A[] annos) {
+  private static <A> List<A> toList(A[] annos) {
 	if ( annos.length == 0 ) {
 	  return Collections.emptyList();
 	} else {

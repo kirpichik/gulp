@@ -15,9 +15,7 @@ public final class ProcessorPlugin extends Plugin {
   @Override
   public <V> boolean connect(
     final Nexus engine,
-    final Object object)
-    throws Exception
-  {
+    final Object object) {
     ProcessorInspector<Gulp.Process> inspector = 
       new ProcessorInspector<Gulp.Process>() {
         @Override

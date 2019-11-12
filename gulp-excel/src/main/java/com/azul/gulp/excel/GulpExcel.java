@@ -8,11 +8,11 @@ import com.azul.gulp.tables.GulpWorkbook;
 public final class GulpExcel {
   private GulpExcel() {}
   
-  public static final GulpWorkbook gulpFile(final String fileName) {
+  public static GulpWorkbook gulpFile(final String fileName) {
     return gulpFile(new File(fileName));
   }
   
-  public static final GulpWorkbook gulpFile(final File file) {
+  public static GulpWorkbook gulpFile(final File file) {
     if ( file.getName().endsWith(".xlsx") ) {
       return gulpXlsx(file);
     } else if ( file.getName().endsWith(".xls") ) {
@@ -22,11 +22,11 @@ public final class GulpExcel {
     }
   }
   
-  public static final GulpWorkbook gulpXlsx(final String fileName) {
+  public static GulpWorkbook gulpXlsx(final String fileName) {
     return gulpXlsx(new File(fileName));
   }
   
-  public static final GulpWorkbook gulpXlsx(final File file) {
+  public static GulpWorkbook gulpXlsx(final File file) {
     return new XlsxWorkbook(() -> new FileInputStream(file));
   }
 }

@@ -15,6 +15,6 @@ public abstract class GulpRowSource extends Source<GulpRow> {
 	final Nexus nexus,
 	final Class<V> type)
   {
-    return new GulpRowConverter<V>(type);
+    return new GulpRowConverter<>(type);
   }
 }

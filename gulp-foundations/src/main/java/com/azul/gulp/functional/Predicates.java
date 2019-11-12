@@ -12,31 +12,21 @@ import com.azul.gulp.inject.InjectionContext;
 public final class Predicates {
   private Predicates() {}
   
-  private static final Predicate<Object> ANY = new Predicate<Object>() {
-    @Override
-    public final boolean matches(final Object value) {
-      return true;
-    }
-  };
+  private static final Predicate<Object> ANY = value -> true;
   
-  private static final Predicate<Object> NOT_NULL = new Predicate<Object>() {
-    @Override
-    public final boolean matches(final Object value) {
-      return (value != null);
-    }
-  };
+  private static final Predicate<Object> NOT_NULL = value -> (value != null);
   
-  public static final boolean isAny(final Predicate<?> predicate) {
+  public static boolean isAny(final Predicate<?> predicate) {
     return (predicate == Predicates.ANY);
   }
   
-  public static final <T> Predicate<T> any() {
+  public static <T> Predicate<T> any() {
     @SuppressWarnings("unchecked")
     Predicate<T> casted = (Predicate<T>)ANY;
     return casted;
   }
   
-  public static final <T> Predicate<T> not(final Predicate<? super T> predicate) {
+  public static <T> Predicate<T> not(final Predicate<? super T> predicate) {
     return new InjectionAwarePredicate<T>() {
       @Override
       public void onInject(InjectionContext ctx) {
@@ -50,13 +40,13 @@ public final class Predicates {
     };
   }
   
-  public static final <T> Predicate<T> notNull() {
+  public static <T> Predicate<T> notNull() {
     @SuppressWarnings("unchecked")
     Predicate<T> casted = (Predicate<T>)NOT_NULL;
     return casted;
   }
   
-  public static final <T> Predicate<T> and(
+  public static <T> Predicate<T> and(
       final Predicate<? super T> lhs,
       final Predicate<? super T> rhs)
   {
@@ -73,7 +63,7 @@ public final class Predicates {
     };
   }
   
-  public static final <T> Predicate<T> or(
+  public static <T> Predicate<T> or(
       final Predicate<? super T> lhs,
       final Predicate<? super T> rhs)
   {
@@ -90,7 +80,7 @@ public final class Predicates {
     };
   }
   
-  public static final <T> Predicate<T> unique() {
+  public static <T> Predicate<T> unique() {
     return new Predicate<T>() {
       private final Set<T> seen = new HashSet<>(64);
       
@@ -101,7 +91,7 @@ public final class Predicates {
     };
   }
   
-  public static final <T> Predicate<T> unique(final ThrowingFunction<? super T, ?> transformFn) {
+  public static <T> Predicate<T> unique(final ThrowingFunction<? super T, ?> transformFn) {
     return new Predicate<T>() {
       private final Set<Object> seen = new HashSet<>(64);
       
@@ -116,7 +106,7 @@ public final class Predicates {
     };
   }
   
-  public static final <T> ThrowingFunction<T, Boolean> asFunction(final Predicate<? super T> predicate) {
+  public static <T> ThrowingFunction<T, Boolean> asFunction(final Predicate<? super T> predicate) {
     return new InjectionAwareFunction<T, Boolean>() {
       @Override
       public void onInject(InjectionContext ctx) {

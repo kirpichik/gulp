@@ -76,7 +76,7 @@ public final class NexusImpl implements Nexus {
     try {
       normalizer.init(this);
     } catch ( ConfigurationException e ) {
-      throw (ConfigurationException)e;
+      throw e;
     } catch ( Exception e ) {
       throw new ConfigurationException(e);
     }
@@ -208,28 +208,26 @@ public final class NexusImpl implements Nexus {
   public final <T> T get(Class<T> rawType, final Class<?>... typeParams) {
     if ( rawType.equals(Emitter.class) && typeParams.length == 1 ) {
       NexusEmitter nexusEmitter = this.getEmitter(typeParams[0]);
-      T casted = (T)new Emitter() {
+      return (T)new Emitter() {
         @Override
         public void fire(Object value) {
           nexusEmitter.fire(value);
         }
       };
-      return casted;
     } else if ( rawType.equals(HandledMarker.class) && typeParams.length == 1 ) {
       NexusHandledMarker nexusMarker = this.getMarker(typeParams[0]);
-      T casted = (T)new HandledMarker() {
+      return (T)new HandledMarker() {
         @Override
         public void mark(Object value) {
           nexusMarker.mark(value);
         }
       };
-      return casted;
     } else {
       throw new ConfigurationException(rawType, typeParams);
     }
   }
   
-  private static final <T> T cast(final Object value) {
+  private static <T> T cast(final Object value) {
     @SuppressWarnings("unchecked")
     T casted = (T)value;
     return casted;
@@ -247,8 +245,8 @@ public final class NexusImpl implements Nexus {
     }
   }
   
-  @SuppressWarnings({"rawtypes", "unchecked"})
-  private static final Class<?>[] toClasses(final Type[] types) {
+  @SuppressWarnings({"rawtypes"})
+  private static Class<?>[] toClasses(final Type[] types) {
     Class[] rawTypes = new Class[types.length];
     for ( int i = 0; i < types.length; ++i ) {
       rawTypes[i] = (Class)types[i];
@@ -297,7 +295,7 @@ public final class NexusImpl implements Nexus {
     }
   }
   
-  private final void supply(final Class<?> type)
+  private void supply(final Class<?> type)
     throws ConfigurationException
   {
     if ( !this.availableTypes.add(type) ) return;

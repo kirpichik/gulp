@@ -32,7 +32,7 @@ public final class CompositeLineMatcher<T> implements LineMatcher<T>, InjectionA
   public final void process(final Line line, final Emitter<T> emitter)
     throws Exception
   {
-    final TrackingEmitter<T> trackingEmitter = new TrackingEmitter<T>(emitter);
+    final TrackingEmitter<T> trackingEmitter = new TrackingEmitter<>(emitter);
     final ExceptionHelper exHelper = new ExceptionHelper();
     
     for ( LineMatcher<T> matcher: this.matchers ) {

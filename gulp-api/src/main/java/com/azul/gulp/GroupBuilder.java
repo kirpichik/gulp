@@ -29,7 +29,7 @@ public final class GroupBuilder<K, E> implements ResultProvider<Groups<K, E>> {
     return new GroupsImpl<>(this.keyNormalizer, this.groups);
   }
   
-  private final GroupImpl<K, E> getOrCreateGroup(final K rawKey) {
+  private GroupImpl<K, E> getOrCreateGroup(final K rawKey) {
     K normalizedKey;
     try {
       normalizedKey = this.keyNormalizer.normalize(rawKey);
@@ -37,7 +37,7 @@ public final class GroupBuilder<K, E> implements ResultProvider<Groups<K, E>> {
       throw new IllegalStateException(e);
     }
     
-    return this.groups.computeIfAbsent(normalizedKey, GroupImpl<K, E>::new);
+    return this.groups.computeIfAbsent(normalizedKey, GroupImpl::new);
   }
   
   protected static final class GroupsImpl<K, E> implements Groups<K, E> {
@@ -72,7 +72,7 @@ public final class GroupBuilder<K, E> implements ResultProvider<Groups<K, E>> {
   
   protected static final class GroupImpl<K, E> implements Group<K, E> {
     private final K key;
-    private final List<E> elements = new ArrayList<E>();
+    private final List<E> elements = new ArrayList<>();
     
     public GroupImpl(K key) {
       this.key = key;

@@ -15,7 +15,7 @@ import org.xml.sax.SAXException;
 import com.azul.gulp.io.IoProvider;
 
 public class XlsxFile implements AutoCloseable {
-  public static final XlsxFile open(final IoProvider<InputStream> streamProvider)
+  public static XlsxFile open(final IoProvider<InputStream> streamProvider)
     throws IOException
   {
     try {

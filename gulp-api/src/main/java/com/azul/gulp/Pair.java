@@ -3,8 +3,8 @@ package com.azul.gulp;
 import java.util.Objects;
 
 public final class Pair<F, S> {
-  public static final <F, S> Pair<F, S> make(final F first, final S second) {
-    return new Pair<F, S>(first, second);
+  public static <F, S> Pair<F, S> make(final F first, final S second) {
+    return new Pair<>(first, second);
   }
   
   public final F first;

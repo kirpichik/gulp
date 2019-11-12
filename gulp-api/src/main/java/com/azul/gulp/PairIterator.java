@@ -3,11 +3,11 @@ package com.azul.gulp;
 import java.util.Iterator;
 
 public final class PairIterator<F, S> implements Iterator<Pair<F, S>> {
-  public static final <F, S> PairIterator<F, S> make(
+  public static <F, S> PairIterator<F, S> make(
     final Iterator<? extends F> firstIterator,
     final Iterator<? extends S> secondIterator)
   {
-    return new PairIterator<F, S>(firstIterator, secondIterator);
+    return new PairIterator<>(firstIterator, secondIterator);
   }
   
   private final Iterator<? extends F> firstIterator;

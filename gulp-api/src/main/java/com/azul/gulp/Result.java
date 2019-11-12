@@ -29,7 +29,7 @@ public final class Result<T> {
     }
   }
   
-  private final Number numValue() {
+  private Number numValue() {
     return (Number)this.getImpl();
   }
   
@@ -47,7 +47,7 @@ public final class Result<T> {
   
   public <U> Result<U> map(final ThrowingFunction<? super T, ? extends U> mapFn) {
     try {
-      return new Result<U>(mapFn.apply(this.get()));
+      return new Result<>(mapFn.apply(this.get()));
     } catch ( Exception e ) {
       throw new IllegalStateException(e);
     }

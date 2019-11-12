@@ -18,7 +18,7 @@ public abstract class ConfigurableLogProcessor implements LogProcessor {
     this.builder.unhandled(klass, processor);
   }
   
-  private final LogProcessor wrapped() {
+  private LogProcessor wrapped() {
 	if ( this.wrapped == null ) {
 	  this.wrapped = this.builder.make();
 	}

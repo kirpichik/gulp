@@ -16,12 +16,7 @@ final class XlsxWorkbook implements GulpWorkbook {
   private final IoProvider<XlsxFile> xlsxProvider;
   
   XlsxWorkbook(final IoProvider<InputStream> streamProvider) {
-    this.xlsxProvider = new IoProvider<XlsxFile>() {
-      @Override
-      public final XlsxFile open() throws IOException {
-        return XlsxFile.open(streamProvider);
-      }
-    };
+    this.xlsxProvider = () -> XlsxFile.open(streamProvider);
   }
     
   @Override
@@ -42,15 +37,10 @@ final class XlsxWorkbook implements GulpWorkbook {
   
   @Override
   public final Iterable<GulpSheet> sheets() {
-    return new Iterable<GulpSheet>() {
-      @Override
-      public final Iterator<GulpSheet> iterator() {
-        return XlsxWorkbook.this.sheetIterator();
-      }
-    };
+    return () -> XlsxWorkbook.this.sheetIterator();
   }
   
-  private final Iterator<GulpSheet> sheetIterator() {
+  private Iterator<GulpSheet> sheetIterator() {
     List<String> names = new ArrayList<>();
     
     // TODO: This is quite wasteful, but so be it.

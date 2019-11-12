@@ -35,7 +35,7 @@ final class CollectionBackedGulpLog<T>
         return null;
       }
       
-      protected void prefetch() throws Exception {}
+      protected void prefetch() {}
     });
   }
   
@@ -45,11 +45,11 @@ final class CollectionBackedGulpLog<T>
   
   @Override
   protected final CollectionBackedGulpLog<T> createOffspring(final Source<T> source) {
-    return new CollectionBackedGulpLog<T>(source, this.normalizers());
+    return new CollectionBackedGulpLog<>(source, this.normalizers());
   }
   
   @Override
   protected final CollectionBackedGulpLog<T> createOffspring(final PipelineConfiguration normalizers) {
-    return new CollectionBackedGulpLog<T>(this.source(), normalizers);
+    return new CollectionBackedGulpLog<>(this.source(), normalizers);
   }
 }

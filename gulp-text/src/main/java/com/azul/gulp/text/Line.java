@@ -140,9 +140,8 @@ public final class Line {
         
     String prefix = this.contents.substring(0,  start);
     String suffix = this.contents.substring(end);
-      
-    Line normalizedLine = new Line(this.num, prefix + replacement + suffix, this.originalContents);
-    return normalizedLine;
+
+    return new Line(this.num, prefix + replacement + suffix, this.originalContents);
   }
   
   public final RegexMatcher match(final String regex) {

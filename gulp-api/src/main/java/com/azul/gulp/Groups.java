@@ -7,12 +7,12 @@ import java.util.Iterator;
 import java.util.List;
 
 public interface Groups<K, E> extends Iterable<Group<K, E>> {
-  public abstract Group<K, E> get(K key);
+  Group<K, E> get(K key);
   
-  public default Groups<K, E> sorted() {
+  default Groups<K, E> sorted() {
     Groups<K, E> wrappedGroup = this;
     
-    List<Group<K, E>> groups = new ArrayList<Group<K, E>>();
+    List<Group<K, E>> groups = new ArrayList<>();
     
     for ( Group<K, E> curGroup: this ) {
       groups.add(curGroup);
@@ -32,7 +32,7 @@ public interface Groups<K, E> extends Iterable<Group<K, E>> {
       }
     };
     
-    Collections.sort(groups, keyComparator);
+    groups.sort(keyComparator);
     
     List<Group<K, E>> sortedGroups = Collections.unmodifiableList(groups);
     

@@ -38,7 +38,7 @@ public abstract class PatternHandler extends FlexNexusHandler {
   protected abstract void match(Match match) throws Exception;
   
   @Override
-  public void init(Nexus engine) throws Exception {
+  public void init(Nexus engine) {
     this.engine = engine;
     for ( PatternFragment fragment: this.fragments ) {
       engine.require(fragment.type());
@@ -60,7 +60,7 @@ public abstract class PatternHandler extends FlexNexusHandler {
     this.launcher.finish();
   }
   
-  protected abstract class Launcher {
+  protected abstract static class Launcher {
     abstract void handle(Nexus engine, Object value) throws Exception;
     
     abstract void finish() throws Exception;
@@ -110,7 +110,7 @@ public abstract class PatternHandler extends FlexNexusHandler {
         
         @Override
         public final <T> List<T> list(final int index) {
-          return Collections.singletonList(this.<T>get(index));
+          return Collections.singletonList(this.get(index));
         }
       };
       
@@ -126,7 +126,7 @@ public abstract class PatternHandler extends FlexNexusHandler {
     }
     
     @Override
-    void handle(final Nexus engine, final Object value) throws Exception {
+    void handle(final Nexus engine, final Object value) {
       throw new UnsupportedOperationException("unfinished");
 //      Object[] match = new Object[this.fragments.size()];
 //      
@@ -139,12 +139,12 @@ public abstract class PatternHandler extends FlexNexusHandler {
     }
     
     @Override
-    void finish() throws Exception {
+    void finish() {
       
     }
   }
   
-  private final class MatchBuilder {
+  private static final class MatchBuilder {
     
   }
 }

@@ -21,8 +21,8 @@ public interface ResultProvider<T> extends Printable {
     return Objects.toString(this.result());
   }
   
-  static class Helper {
-    private static final Field getResultField(final Class<?> aClass) {
+  class Helper {
+    private static Field getResultField(final Class<?> aClass) {
       Field resultField = null;
       for ( Field field: aClass.getDeclaredFields() ) {
         if ( field.isAnnotationPresent(Gulp.Result.class) ) {

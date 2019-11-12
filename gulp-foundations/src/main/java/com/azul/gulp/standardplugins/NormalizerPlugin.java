@@ -12,8 +12,7 @@ public final class NormalizerPlugin extends Plugin {
   @Override
   public <V> void onEventRequest(
     final Nexus engine,
-    final Class<V> requiredType) throws Exception
-  {
+    final Class<V> requiredType) {
     Gulp.Normalize normalizeAnno = requiredType.getAnnotation(Gulp.Normalize.class);
     if ( normalizeAnno == null ) return;
     
@@ -22,7 +21,7 @@ public final class NormalizerPlugin extends Plugin {
     // ugly bit of duplication with Normalizers
     engine.normalize(requiredType, new NexusNormalizer<V>() {
       @Override
-      public void init(final Nexus nexus) throws Exception {
+      public void init(final Nexus nexus) {
         nexus.inject(normalizer);
       }
       
@@ -34,7 +33,7 @@ public final class NormalizerPlugin extends Plugin {
   }
   
   @Override
-  public final <V> boolean connect(final Nexus engine, final Object object) throws Exception {
+  public final <V> boolean connect(final Nexus engine, final Object object) {
     return false;
   }
   

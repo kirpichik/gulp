@@ -12,7 +12,7 @@ public final class ParameterizedResult<P, V> {
     return this.provider.get(param);
   }
   
-  private final Number getNum(P param) {
+  private Number getNum(P param) {
     return (Number)this.provider.get(param);
   }
   
@@ -40,6 +40,6 @@ public final class ParameterizedResult<P, V> {
   }
   
   public final Result<V> getResult(P param) {
-    return new Result<V>(param, this.get(param));
+    return new Result<>(param, this.get(param));
   }
 }

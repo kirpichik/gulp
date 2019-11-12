@@ -20,7 +20,7 @@ final class GulpPairStreamImpl<F, S>
   
   @Override
   protected GulpPairStream<F, S> createOffspring(StreamCore<? extends Pair<F, S>> core) {
-    return new GulpPairStreamImpl<F, S>(core);
+    return new GulpPairStreamImpl<>(core);
   }
 
   @Override

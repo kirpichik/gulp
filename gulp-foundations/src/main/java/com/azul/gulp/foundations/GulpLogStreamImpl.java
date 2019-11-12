@@ -12,6 +12,6 @@ public final class GulpLogStreamImpl<T>
   
   @Override
   protected GulpLogStream<T> createOffspring(StreamCore<? extends T> core) {
-    return new GulpLogStreamImpl<T>(core);
+    return new GulpLogStreamImpl<>(core);
   }
 }

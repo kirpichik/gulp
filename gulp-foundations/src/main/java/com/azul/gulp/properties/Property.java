@@ -4,15 +4,15 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
 public interface Property {
-  public String name();
+  String name();
   
-  public Class<?> targetType();
+  Class<?> targetType();
   
-  public Class<?> type();
+  Class<?> type();
   
-  public Type genericType();
+  Type genericType();
   
-  public Object get(Object target);
+  Object get(Object target);
   
-  public <T extends Annotation> T annotation(final Class<T> annoClass);
+  <T extends Annotation> T annotation(final Class<T> annoClass);
 }

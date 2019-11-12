@@ -21,8 +21,8 @@ final class TypeDispatcher<T> {
   
   public TypeDispatcher(final ExceptionHandler exceptionHandler) {
     this.exceptionHandler = exceptionHandler;
-    this.normalizers = new NexusNormalizers<T>(exceptionHandler);
-    this.handlers = new Handlers<T>(exceptionHandler);
+    this.normalizers = new NexusNormalizers<>(exceptionHandler);
+    this.handlers = new Handlers<>(exceptionHandler);
   }
   
   public final void init(final Nexus ctx) {

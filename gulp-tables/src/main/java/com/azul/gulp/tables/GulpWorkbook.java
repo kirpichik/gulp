@@ -1,11 +1,11 @@
 package com.azul.gulp.tables;
 
 public interface GulpWorkbook {
-  public abstract GulpSheet sheetByName(final String name);
+  GulpSheet sheetByName(final String name);
 
-  public abstract GulpSheet sheetAt(final int index);
+  GulpSheet sheetAt(final int index);
   
-  public abstract Iterable<GulpSheet> sheets();
+  Iterable<GulpSheet> sheets();
 
-  public abstract GulpSheet curSheet();
+  GulpSheet curSheet();
 }

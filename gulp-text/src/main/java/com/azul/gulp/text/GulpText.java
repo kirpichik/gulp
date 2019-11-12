@@ -24,7 +24,7 @@ public final class GulpText {
   @Target(ElementType.TYPE)
   @Retention(RetentionPolicy.RUNTIME)
   public @interface LineMatchers {
-    public abstract LineMatcher[] value();
+    LineMatcher[] value();
   }
   
   @Inherited
@@ -32,32 +32,32 @@ public final class GulpText {
   @Retention(RetentionPolicy.RUNTIME)
   @Repeatable(LineMatchers.class)
   public @interface LineMatcher {
-    public abstract String regex() default "";
+    String regex() default "";
     
-    public abstract Class<? extends com.azul.gulp.text.LineMatcher> value() 
+    Class<? extends com.azul.gulp.text.LineMatcher> value()
       default com.azul.gulp.text.LineMatcher.class;
   }
   
   
   
   
-  public static final GulpTextLog gulpFile(final String fileName) {
+  public static GulpTextLog gulpFile(final String fileName) {
     return gulpFile(new File(fileName));
   }
   
-  public static final GulpTextLog gulpFile(final File fileName) {
+  public static GulpTextLog gulpFile(final File fileName) {
     return new GulpTextLog(new LineSource(fileName));
   }
   
-  public static final GulpTextLog gulp(final URL url) {
+  public static GulpTextLog gulp(final URL url) {
 	return new GulpTextLog(new LineSource(url));
   }
   
-  public static final GulpTextLog gulp(final IoProvider<Reader> readerProvider) {
+  public static GulpTextLog gulp(final IoProvider<Reader> readerProvider) {
 	return new GulpTextLog(new LineSource(readerProvider));
   }
   
-  static final <T> com.azul.gulp.text.LineMatcher<T> makeMatcherFrom(
+  static <T> com.azul.gulp.text.LineMatcher<T> makeMatcherFrom(
     final Class<T> dataClass,
     final List<GulpText.LineMatcher> annoList)
   {
@@ -67,26 +67,26 @@ public final class GulpText {
 	  matchers.add(GulpText.makeMatcherFrom(dataClass, matcherAnno));
 	}
 	
-    return new CompositeLineMatcher<T>(matchers);
+    return new CompositeLineMatcher<>(matchers);
   }
   
   // TODO: lower visibility
-  static final boolean isRegexBased(final GulpText.LineMatcher anno) {
+  static boolean isRegexBased(final GulpText.LineMatcher anno) {
     return !anno.regex().isEmpty();
   }
   
   // TODO: lower visibility
-  static final boolean usesCustomClass(final GulpText.LineMatcher anno) {
+  static boolean usesCustomClass(final GulpText.LineMatcher anno) {
     return !anno.value().equals(com.azul.gulp.text.LineMatcher.class);
   }
   
   @SuppressWarnings({"unchecked", "rawtypes"})
-  private static final <T> com.azul.gulp.text.LineMatcher<T> makeMatcherFrom(
+  private static <T> com.azul.gulp.text.LineMatcher<T> makeMatcherFrom(
     final Class<T> dataClass,
     final GulpText.LineMatcher anno)
   {
     if ( !anno.regex().isEmpty() ) {
-      return new AnnotatedRegexLineMatcher<T>(dataClass, anno.regex());
+      return new AnnotatedRegexLineMatcher<>(dataClass, anno.regex());
     }
     
     Class<? extends com.azul.gulp.text.LineMatcher> lineMatcherClass = anno.value();

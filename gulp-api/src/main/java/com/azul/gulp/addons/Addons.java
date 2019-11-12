@@ -14,7 +14,7 @@ public abstract class Addons {
       return targetClassOf(addonClass);
 	}
 	
-    public static final <T> Class<T> targetClassOf(final Class<? extends Addon<T>> addonClass) {
+    public static <T> Class<T> targetClassOf(final Class<? extends Addon<T>> addonClass) {
 	  Type superType = addonClass.getGenericSuperclass();
 	  ParameterizedType paramType = (ParameterizedType)superType;
 	  
@@ -36,7 +36,7 @@ public abstract class Addons {
 	return loadedAddons;
   }
   
-  private final List<Class<Addon<?>>> loadAddonsImpl() {
+  private List<Class<Addon<?>>> loadAddonsImpl() {
 	Class<?>[] childClasses = this.getClass().getDeclaredClasses();
 	  
 	List<Class<Addon<?>>> addons = new ArrayList<>();
@@ -52,7 +52,7 @@ public abstract class Addons {
   }
   
   @SuppressWarnings("rawtypes")
-  private static final Class<?> targetClassOf(final Class<? extends Addon> addonClass) {
+  private static Class<?> targetClassOf(final Class<? extends Addon> addonClass) {
 	Type superType = addonClass.getGenericSuperclass();
 	ParameterizedType paramType = (ParameterizedType)superType;
 	  

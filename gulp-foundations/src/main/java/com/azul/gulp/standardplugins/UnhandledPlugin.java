@@ -12,9 +12,7 @@ public final class UnhandledPlugin extends Plugin {
   @Override
   public <V> boolean connect(
     final Nexus engine,
-    final Object object)
-    throws Exception
-  {
+    final Object object) {
     ProcessorInspector<Gulp.ProcessUnhandled> inspector = 
       new ProcessorInspector<Gulp.ProcessUnhandled>() {
         @Override

@@ -14,7 +14,7 @@ final class GulpRowImpl extends GulpRow {
     return casted;
   }
   
-  private final Object data(final int cellIndex) {
+  private Object data(final int cellIndex) {
     return this.data[cellIndex];
   }
   

@@ -17,12 +17,12 @@ public interface LogProcessor {
     return null;
   }
   
-  public static interface Provider {
-    public abstract LogProcessor get();
+  interface Provider {
+    LogProcessor get();
   }
   
   // deliberately not final to allow anonymous double-brace configuration
-  public static final class Builder implements LogProcessor.Provider {
+  final class Builder implements LogProcessor.Provider {
     private final Map<Class<?>, Processor<?>> processors = new HashMap<>(16);
     private final Map<Class<?>, Processor<?>> unhandledProcessors = new HashMap<>(4);
     private final Set<Class<?>> requiredTypes = new HashSet<>(8);

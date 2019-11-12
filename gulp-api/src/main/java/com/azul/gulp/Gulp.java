@@ -37,13 +37,13 @@ public final class Gulp {
   @Retention(RetentionPolicy.RUNTIME)
   @Target({ElementType.FIELD})
   public @interface Key {
-    public abstract Class<?> value() default Object.class;
+    Class<?> value() default Object.class;
   }
 
   @Retention(RetentionPolicy.RUNTIME)
   @Target({ElementType.FIELD})
   public @interface ForeignKey {
-    public abstract Class<?> value();
+    Class<?> value();
   }
   
 //  public @interface Predicate {
@@ -57,12 +57,12 @@ public final class Gulp {
   @Retention(RetentionPolicy.RUNTIME)
   @Target(ElementType.TYPE)
   public @interface ComplexEvent {
-    public Class<? extends GenericProcessor> value();
+    Class<? extends GenericProcessor> value();
   }
   
   @Retention(RetentionPolicy.RUNTIME)
   @Target(ElementType.TYPE)
   public @interface Normalize {
-    public Class<? extends Normalizer<?>> value();
+    Class<? extends Normalizer<?>> value();
   }
 }

@@ -7,8 +7,7 @@ public final class InnerSubclassPlugin extends Plugin {
   @Override
   public final <V> boolean handleEventRequest(
     final Nexus engine, 
-    final Class<V> requiredType) throws Exception
-  {
+    final Class<V> requiredType) {
     boolean found = false;
     
     for ( Class<?> innerClass: requiredType.getClasses() ) {

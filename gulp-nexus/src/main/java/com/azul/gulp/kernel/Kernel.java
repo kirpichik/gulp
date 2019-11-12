@@ -41,21 +41,11 @@ public final class Kernel {
   
   @Deprecated
   public final FlexNexusEmitter asFlexEmitter() {
-    return new FlexNexusEmitter() {
-      @Override
-      public <T> void fire(final Class<T> type, final T value) throws LogProcessingException {
-        Kernel.this.fire(type, value);
-      }
-    };
+    return Kernel.this::fire;
   }
   
   public final <T> NexusEmitter<T> asTypeEmitter(final Class<T> eventType) {
-    return new NexusEmitter<T>() {
-      @Override
-      public final void fire(final T value) {
-        Kernel.this.fire(eventType, value);
-      }
-    };
+    return value -> Kernel.this.fire(eventType, value);
   }
   
   public final <T> NexusHandledMarker<T> asTypeMarker(final Class<T> eventType) {
@@ -73,13 +63,13 @@ public final class Kernel {
   }
   
   @SuppressWarnings("unchecked")
-  private final <T> void fire(final Class<T> type, final T data) throws LogProcessingException {
+  private <T> void fire(final Class<T> type, final T data) throws LogProcessingException {
     if ( this.pending != null ) {
-      this.pending.add(new FireEvent<T>(type, data));
+      this.pending.add(new FireEvent<>(type, data));
       return;
     }
     
-    this.pending = new ArrayList<FireEvent<?>>();
+    this.pending = new ArrayList<>();
     try {
       this.getOrCreateTypeDispatcher(type).fire(this, data);
     } finally {
@@ -95,12 +85,12 @@ public final class Kernel {
     }
   }
   
-  private final <T> boolean hasUnhandler(final Class<T> type) {
+  private <T> boolean hasUnhandler(final Class<T> type) {
     TypeDispatcher<T> dispatcher = this.getTypeDispatcher(type);
     return dispatcher != null && dispatcher.hasUnhandler();
   }
   
-  private final <T> void markHandled(final Class<T> type, final T data) {
+  private <T> void markHandled(final Class<T> type, final T data) {
     TypeDispatcher<T> dispatcher = this.getTypeDispatcher(type);
     if ( dispatcher != null ) dispatcher.markHandled(data);
   }
@@ -151,18 +141,17 @@ public final class Kernel {
     }
   }
   
-  private final <T> TypeDispatcher<T> getTypeDispatcher(final Class<T> type) {
-    TypeDispatcher<T> existingDispatcher = (TypeDispatcher<T>)this.typeDispatchers.get(type);
-    return existingDispatcher;
+  private <T> TypeDispatcher<T> getTypeDispatcher(final Class<T> type) {
+    return (TypeDispatcher<T>) this.typeDispatchers.get(type);
   }
   
-  private final <T> TypeDispatcher<T> getOrCreateTypeDispatcher(final Class<T> type) {
+  private <T> TypeDispatcher<T> getOrCreateTypeDispatcher(final Class<T> type) {
     TypeDispatcher<T> existingDispatcher = this.getTypeDispatcher(type);
     if ( existingDispatcher != null ) {
       return existingDispatcher;
     }
     
-    TypeDispatcher<T> newDispatcher = new TypeDispatcher<T>(this.dispatchingExceptionHandler);
+    TypeDispatcher<T> newDispatcher = new TypeDispatcher<>(this.dispatchingExceptionHandler);
 
     // both of these scan the existing map of registered dispatchers, 
     // so this needs to be done before the put below
@@ -173,14 +162,14 @@ public final class Kernel {
     return newDispatcher;
   }
   
-  private final <T> void registerTypeDispatcher(final Class<T> type, final TypeDispatcher<T> newDispatcher) {
+  private <T> void registerTypeDispatcher(final Class<T> type, final TypeDispatcher<T> newDispatcher) {
     this.typeDispatchers.put(type, newDispatcher);
   }
 
   /**
    * Registers a Handler on the newDispatcher that connects it to all existing parent handlers
    */
-  private final <T> void linkExistingParents(
+  private <T> void linkExistingParents(
     final Class<T> type,
     final TypeDispatcher<T> newDispatcher)
   {
@@ -196,14 +185,14 @@ public final class Kernel {
     }
     
     if ( !superDispatchers.isEmpty() ) {
-      newDispatcher.addHandler(new SuperHandler<T>(this, superDispatchers));
+      newDispatcher.addHandler(new SuperHandler<>(this, superDispatchers));
     }
   }
   
   /**
    * Registers a Handler on the newDispatcher that connects it to all existing parent handlers
    */
-  private final <T> void linkExistingChildren(
+  private <T> void linkExistingChildren(
     final Class<T> type,
     final TypeDispatcher<T> dispatcher)
   {
@@ -217,7 +206,7 @@ public final class Kernel {
       TypeDispatcher<? extends T> childDispatcher = (TypeDispatcher<? extends T>)entry.getValue();
       
       if ( handler == null ) {
-        handler = new ExtendsHandler<T>(this, dispatcher);
+        handler = new ExtendsHandler<>(this, dispatcher);
       }
       childDispatcher.addHandler(handler);
     }
@@ -252,7 +241,7 @@ public final class Kernel {
       this.superDispatchers = superDispatchers;
     }
 
-    public void handle(final T value) throws Exception {
+    public void handle(final T value) {
       for ( TypeDispatcher<? super T> superDispatcher: this.superDispatchers) {
         superDispatcher.fire(this.engine, value);
       }
@@ -266,7 +255,7 @@ public final class Kernel {
   // if necessary and init is overridden as unsupported operation.
   private static abstract class CoreHandler<T> implements NexusHandler<T> {
     @Override
-    public void init(final Nexus engine) throws Exception {
+    public void init(final Nexus engine) {
       throw new UnsupportedOperationException();
     }
   }
@@ -329,9 +318,7 @@ public final class Kernel {
     }
     
     public void handle(
-      final T value)
-      throws Exception
-    {
+      final T value) {
       this.dispatcher.fire(this.engine, value);
     }
   }

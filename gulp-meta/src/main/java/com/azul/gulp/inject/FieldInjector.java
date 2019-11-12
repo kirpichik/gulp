@@ -20,8 +20,8 @@ public class FieldInjector implements ExactInjector {
     this.injectableFields = getInjectableFields(target.getClass());
   }
   
-  private static final List<Field> getInjectableFields(final Class<?> type) {
-    List<Field> injectableFields = new ArrayList<Field>();
+  private static List<Field> getInjectableFields(final Class<?> type) {
+    List<Field> injectableFields = new ArrayList<>();
     
     for ( Field field: type.getFields() ) {
       if ( field.isAnnotationPresent(Gulp.Inject.class) ) {
@@ -38,12 +38,12 @@ public class FieldInjector implements ExactInjector {
     return Collections.unmodifiableList(injectableFields);
   }
   
-  private static final boolean isPublic(final Field field) {
+  private static boolean isPublic(final Field field) {
     return (field.getModifiers() & Modifier.PUBLIC) != 0;
   }
   
   public final Set<Type> requires() {
-    Set<Type> types = new HashSet<Type>(this.injectableFields.size());
+    Set<Type> types = new HashSet<>(this.injectableFields.size());
     for ( Field field: this.injectableFields ) {
       types.add(field.getGenericType());
     }

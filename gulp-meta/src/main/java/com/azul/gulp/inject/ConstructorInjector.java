@@ -19,7 +19,7 @@ public class ConstructorInjector<T> implements ExactInjector {
     this.params = new Object[this.injectableCtor.getParameterTypes().length];
   }
   
-  private static final <T> Constructor<T> getInjectableCtor(final Class<T> type) {
+  private static <T> Constructor<T> getInjectableCtor(final Class<T> type) {
     Constructor<?>[] ctors = type.getDeclaredConstructors();
     
     Constructor<?> injectableCtor = null;
@@ -47,7 +47,7 @@ public class ConstructorInjector<T> implements ExactInjector {
     return cast(ctor);
   }
   
-  private static final <T> Constructor<T> cast(final Constructor<?> ctor) {
+  private static <T> Constructor<T> cast(final Constructor<?> ctor) {
     @SuppressWarnings("unchecked")
     Constructor<T> casted = (Constructor<T>)ctor;
     return casted;

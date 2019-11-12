@@ -3,12 +3,12 @@ package com.azul.gulp;
 import java.util.Objects;
 
 public class Range<C> implements Comparable<Range<C>> {
-  public static final <C> Range<C> make(C start, C end) {
-    return new Range<C>(start, end);
+  public static <C> Range<C> make(C start, C end) {
+    return new Range<>(start, end);
   }
   
 
-  public static final <C> Range<C> merge(Range<C> r1, Range<C> r2) {
+  public static <C> Range<C> merge(Range<C> r1, Range<C> r2) {
     return make(min(r1.start, r2.start), max(r1.end, r2.end));
       
   }
@@ -27,7 +27,7 @@ public class Range<C> implements Comparable<Range<C>> {
   }
   
   @SuppressWarnings("unchecked")
-  private static final <C> int compare(C lhs, C rhs) {
+  private static <C> int compare(C lhs, C rhs) {
     if ( !(lhs instanceof Comparable) ) throw new UnsupportedOperationException();
     if ( !(rhs instanceof Comparable) ) throw new UnsupportedOperationException();
     
@@ -35,11 +35,11 @@ public class Range<C> implements Comparable<Range<C>> {
     return lhsComp.compareTo(rhs);
   }
   
-  private static final <C> C min(C lhs, C rhs) {
+  private static <C> C min(C lhs, C rhs) {
     return compare(lhs, rhs) <= 0 ? lhs : rhs;
   }
   
-  private static final <C> C max(C lhs, C rhs) {
+  private static <C> C max(C lhs, C rhs) {
     return compare(lhs, rhs) >= 0 ? lhs : rhs;
   }
   
@@ -61,9 +61,8 @@ public class Range<C> implements Comparable<Range<C>> {
   public int compareTo(Range<C> that) {
     int startComp = compare(this.start, that.start);
     if ( startComp != 0 ) return startComp;
-    
-    int endComp = compare(this.end, that.end);
-    return endComp;
+
+    return compare(this.end, that.end);
   }
   
   @Override

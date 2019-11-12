@@ -8,9 +8,7 @@ public final class ComplexEventPlugin extends Plugin {
   @Override
   public <V> boolean handleEventRequest(
     final Nexus engine,
-    final Class<V> requiredType)
-    throws Exception
-  {
+    final Class<V> requiredType) {
     Gulp.ComplexEvent eventAnno = requiredType.getAnnotation(Gulp.ComplexEvent.class);
     if ( eventAnno == null ) return false;
     
@@ -22,9 +20,7 @@ public final class ComplexEventPlugin extends Plugin {
   @Override
   public <T> boolean connect(
     final Nexus engine,
-    final Object object)
-    throws Exception
-  {
+    final Object object) {
     return false;
   }
 }
